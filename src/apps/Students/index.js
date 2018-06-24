@@ -16,11 +16,25 @@ class Students extends Component {
       })
   }
   
+  deleteStudent(student_id) {
+    fetch(`${Config.baseApi}/students/${student_id}`, {
+      method: 'DELETE'
+    })
+    .then((response) => response.json())
+    .then((responseJson) => {
+      const students = [...this.state.students];
+      const deletedStudent = students.find((st) => st.student_id == student_id)
+      students.splice(students.indexOf(deletedStudent), 1);
+      this.setState({ students: students });
+    })
+  }
+  
   render() {
     const students = this.state.students.map((student) =>
       <li className="list-group-item" key={student.id}>
         { student.nickname }
-        <Link className='float-right' to={`/students/${student.student_id}`}>Show</Link>
+        <a className='float-right text-danger' href="javascript:void(0)" onClick={() => this.deleteStudent(student.student_id)}>Delete</a>
+        <Link className='float-right mr-3' to={`/students/${student.student_id}`}>Show</Link>
       </li>
     );
     return (
